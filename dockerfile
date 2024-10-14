@@ -21,13 +21,12 @@ RUN pip3 install \
     torchvision \
     transformers \
     sentencepiece \
+    flash-attn \
     accelerate \
     bitsandbytes \
     python-multipart \
     decord \
-    packaging \
-    flash-attn
- 
+    packaging 
 # Copy the current directory contents into the container at /app
 COPY . .
  
