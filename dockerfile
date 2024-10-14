@@ -15,12 +15,12 @@ RUN pip3 install fastapi uvicorn
  
 # Install additional dependencies
 RUN pip3 install \
-    Pillow \
+    Pillow==10.1.0 \
     uvicorn \
-    torch \
-    torchvision \
-    transformers \
-    sentencepiece \
+    torch==2.1.2 \
+    torchvision==0.16.2 \
+    transformers==4.40.0 \
+    sentencepiece==4.40.0 \
     accelerate \
     bitsandbytes \
     python-multipart \
