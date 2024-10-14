@@ -3,17 +3,32 @@ from pydantic import BaseModel
 from PIL import Image
 import logging
 from typing import Optional
+import gc
+import uvicorn
 
 import torch
 from transformers import AutoModel, AutoTokenizer
 
 app = FastAPI()
-
+torch.set_grad_enabled(False)
 access_token = "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"
 
 model = AutoModel.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True, use_auth_token=access_token)
 tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True, use_auth_token=access_token)
 model.config.use_cache = False
+model.eval()  
+
+
+def clear_cuda_cache():
+    """
+    Clears the CUDA cache to prevent memory leaks.
+    """
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
+        gc.collect()  # Clear Python garbage
+
+
 
 class VLLMRequest(BaseModel):
     question: str = Form(...)
@@ -53,3 +68,7 @@ async def vllm(
     except Exception as e:
         logging.error(str(e))
         return {"error": str(e)}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, workers=1) 

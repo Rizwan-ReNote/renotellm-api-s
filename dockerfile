@@ -16,6 +16,7 @@ RUN pip3 install fastapi uvicorn
 # Install additional dependencies
 RUN pip3 install \
     Pillow \
+    uvicorn \
     torch \
     torchvision \
     transformers \
@@ -26,10 +27,10 @@ RUN pip3 install \
     flash-attn
  
 # Copy the current directory contents into the container at /app
-COPY . /app
+COPY . .
  
 # Make port 8000 available to the world outside this container
-EXPOSE 8000
+EXPOSE 8080
  
 # Run the FastAPI application using Uvicorn server
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "mainv2:app", "--host", "0.0.0.0", "--port", "8080"]
