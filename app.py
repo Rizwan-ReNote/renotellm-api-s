@@ -21,8 +21,9 @@ app = FastAPI()
 clear_cuda_cache()
 access_token = "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"
  
-model = AutoModel.from_pretrained('ReNoteTech/MiniCPM-Llama3-V-2_5-int4', trust_remote_code=True, use_auth_token=access_token)
-tokenizer = AutoTokenizer.from_pretrained('ReNoteTech/MiniCPM-Llama3-V-2_5-int4', trust_remote_code=True, use_auth_token=access_token)
+model = AutoModel.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True)
+model.eval()
 model.config.use_cache = False
  
 @app.post("/vllm")

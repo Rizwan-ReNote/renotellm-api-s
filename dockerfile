@@ -15,12 +15,12 @@ RUN pip3 install fastapi uvicorn
  
 # Install additional dependencies
 RUN pip3 install \
-    Pillow==10.1.0 \
+    Pillow \
     uvicorn \
-    torch==2.1.2 \
-    torchvision==0.16.2 \
-    transformers==4.40.0 \
-    sentencepiece==4.40.0 \
+    torch \
+    torchvision \
+    transformers \
+    sentencepiece \
     accelerate \
     bitsandbytes \
     python-multipart \
@@ -36,4 +36,4 @@ EXPOSE 8080
  
 # Run the FastAPI application using Uvicorn server
 # CMD ["uvicorn", "mainv2:app", "--host", "0.0.0.0", "--port", "8080"]
-CMD ["sh", "-c", "uvicorn mainv2:app --host 0.0.0.0 --port 8080 && sleep infinity"]
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port 8080 && sleep infinity"]
