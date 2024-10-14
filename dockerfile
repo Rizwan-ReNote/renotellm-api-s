@@ -24,6 +24,7 @@ RUN pip3 install \
     accelerate \
     bitsandbytes \
     python-multipart \
+    decord \
     flash-attn
  
 # Copy the current directory contents into the container at /app
