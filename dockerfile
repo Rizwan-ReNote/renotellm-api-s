@@ -108,10 +108,10 @@ RUN pip3 install \
 
 # Pre-download the model and tokenizer
 RUN python3 -c "\
-    from transformers import AutoModel, AutoTokenizer; \
-    access_token = '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'; \
-    model = AutoModel.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True, use_auth_token=access_token); \
-    tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True, use_auth_token=access_token)"
+from transformers import AutoModel, AutoTokenizer; \
+access_token = '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'; \
+model = AutoModel.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True, use_auth_token=access_token); \
+tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True, use_auth_token=access_token)"
 
 # Copy the current directory contents into the container at /app
 COPY . /app
@@ -121,4 +121,5 @@ EXPOSE 8080
 
 # Run the FastAPI application using Uvicorn server
 CMD ["sh", "-c", "uvicorn mainv2:app --host 0.0.0.0 --port 8080 && sleep infinity"]
+
 
