@@ -15,13 +15,13 @@ torch.set_grad_enabled(False)
 access_token = "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"
 
 model = AutoModel.from_pretrained(
-    'openbmb/MiniCPM-V-2_6-int4', 
-    trust_remote_code=True, 
+    'openbmb/MiniCPM-V-2_6-int4',
+    trust_remote_code=True,
     use_auth_token=access_token
 )
 tokenizer = AutoTokenizer.from_pretrained(
-    'openbmb/MiniCPM-V-2_6-int4', 
-    trust_remote_code=True, 
+    'openbmb/MiniCPM-V-2_6-int4',
+    trust_remote_code=True,
     use_auth_token=access_token
 )
 
@@ -30,13 +30,10 @@ model.eval()
 
 
 def clear_cuda_cache():
-    """
-    Clears the CUDA cache to prevent memory leaks.
-    """
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
         torch.cuda.synchronize()
-        gc.collect()  # Clear Python garbage collector
+        gc.collect()
 
 
 @app.post("/vllm")
@@ -53,7 +50,6 @@ async def vllm(
         if image:
             img = Image.open(image.file).convert('RGB')
 
-        # Prepare the input message for the model
         msgs = [{'role': 'user', 'content': question}]
         
         # Model response
@@ -74,7 +70,6 @@ async def vllm(
         return {"error": str(e)}
     
     finally:
-        # Clear CUDA cache after processing the request
         clear_cuda_cache()
 
 
