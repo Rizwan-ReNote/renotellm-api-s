@@ -95,11 +95,12 @@ RUN apt-get install -y python3 python3-pip
 # Install FastAPI and Uvicorn
 RUN pip3 install fastapi uvicorn
 
+# Install PyTorch, Torchvision, and Torchaudio with CUDA 11.8 support
+RUN pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
 # Install additional dependencies
 RUN pip3 install \
     Pillow \
-    torch \
-    torchvision \
     transformers \
     sentencepiece \
     accelerate \
@@ -121,5 +122,3 @@ EXPOSE 8080
 
 # Run the FastAPI application using Uvicorn server
 CMD ["sh", "-c", "uvicorn mainv2:app --host 0.0.0.0 --port 8080 && sleep infinity"]
-
-
