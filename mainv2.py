@@ -5,18 +5,28 @@ import logging
 from typing import Optional
 import gc
 import uvicorn
-
 import torch
 from transformers import AutoModel, AutoTokenizer
 
 app = FastAPI()
+
 torch.set_grad_enabled(False)
+
 access_token = "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"
 
-model = AutoModel.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True, use_auth_token=access_token)
-tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-V-2_6-int4', trust_remote_code=True, use_auth_token=access_token)
+model = AutoModel.from_pretrained(
+    'openbmb/MiniCPM-V-2_6-int4', 
+    trust_remote_code=True, 
+    use_auth_token=access_token
+)
+tokenizer = AutoTokenizer.from_pretrained(
+    'openbmb/MiniCPM-V-2_6-int4', 
+    trust_remote_code=True, 
+    use_auth_token=access_token
+)
+
 model.config.use_cache = False
-model.eval()  
+model.eval()
 
 
 def clear_cuda_cache():
@@ -26,20 +36,12 @@ def clear_cuda_cache():
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
         torch.cuda.synchronize()
-        gc.collect()  # Clear Python garbage
+        gc.collect()  # Clear Python garbage collector
 
-
-
-class VLLMRequest(BaseModel):
-    question: str = Form(...)
-    sampling: Optional[bool] = Form(True)  # Optional, defaults to True
-    temperature: Optional[float] = Form(0.7)  # Optional, defaults to 0.7
-    stream: Optional[bool] = Form(False)  # Optional, defaults to False
-    system_prompt: Optional[str] = Form('')  # Optional, defaults to an empty string
 
 @app.post("/vllm")
 async def vllm(
-    image: UploadFile = File(None),  # Make the file upload optional
+    image: UploadFile = File(None),
     question: str = Form(...),
     sampling: Optional[bool] = Form(True),
     temperature: Optional[float] = Form(0.7),
@@ -47,15 +49,16 @@ async def vllm(
     system_prompt: Optional[str] = Form(''),
 ):
     try:
-        if not image:
-            image = None
-        else:
-            image = Image.open(image.file).convert('RGB')
-        
+        img = None
+        if image:
+            img = Image.open(image.file).convert('RGB')
+
+        # Prepare the input message for the model
         msgs = [{'role': 'user', 'content': question}]
         
-        res = model.chat(
-            image=image,
+        # Model response
+        response = model.chat(
+            image=img,
             msgs=msgs,
             tokenizer=tokenizer,
             sampling=sampling,
@@ -64,11 +67,17 @@ async def vllm(
             system_prompt=system_prompt
         )
         
-        return res
+        return response
+    
     except Exception as e:
-        logging.error(str(e))
+        logging.error(f"Error: {str(e)}")
         return {"error": str(e)}
+    
+    finally:
+        # Clear CUDA cache after processing the request
+        clear_cuda_cache()
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080, workers=1) 
+    uvicorn.run(app, host="0.0.0.0", port=8080, workers=1)
+
