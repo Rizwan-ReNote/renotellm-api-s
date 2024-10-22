@@ -76,8 +76,8 @@
 
 # if __name__ == "__main__":
 #     uvicorn.run(app, host="0.0.0.0", port=8080, workers=1)
-
 #############################################################################
+
 import gc
 import logging
 import os
@@ -95,7 +95,7 @@ app = FastAPI()
 torch.set_grad_enabled(False)
 
 # Directory to store model locally
-MODEL_DIR = "./model_weights"
+MODEL_DIR = "./local_model"
 
 # Function to clear CUDA cache
 

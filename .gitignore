@@ -1,3 +1,4 @@
 llmenv
 __pycache__
 model_weights
+local_model
