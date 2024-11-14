@@ -51,8 +51,9 @@ RUN pip3 install \
     sentencepiece \
     accelerate \
     bitsandbytes \
-    python-multipart
-# Copy the current directory contents into the container at /app
+    python-multipart \
+    decord
+    # Copy the current directory contents into the container at /app
 COPY . /app
 # Make port 8000 available to the world outside this container
 EXPOSE 8080
