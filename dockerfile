@@ -22,3 +22,5 @@ COPY . /app
 EXPOSE 8080
 
 CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port 8080 && sleep infinity"]
+
+# docker run -p 8080:8080 --env-file env.list your_image_name

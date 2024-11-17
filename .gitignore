@@ -4,3 +4,5 @@ model_weights
 local_model
 local_model\MiniCPM-V-2_6-int4\model-00001-of-00002.safetensors
 local_model\MiniCPM-V-2_6-int4\model-00002-of-00002.safetensors
+.evn
+env.list
